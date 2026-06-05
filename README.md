@@ -1,6 +1,7 @@
 # hms-cpapdash-charts
 
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support-%23FFDD00.svg?logo=buy-me-a-coffee)](https://www.buymeacoffee.com/aamat09)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 Shared Angular component library (`@cpapdash/charts`) for visualizing CPAP therapy data. It is the single set of chart and summary components reused across the [CpapDash](https://www.cpapdash.com/opensource) apps, so the web dashboard and companion app render therapy data the same way.
 
@@ -10,12 +11,12 @@ Built on [Chart.js](https://www.chartjs.org/) with `chartjs-plugin-annotation`. 
 
 | Selector | Component | Purpose |
 |----------|-----------|---------|
-| `sl-signal-chart` | `SignalChartComponent` | Line chart for a therapy signal (flow, pressure, …) with annotations |
-| `sl-metric-card` | `MetricCardComponent` | Single labelled metric (e.g. AHI) with unit |
-| `sl-overview-strip` | `OverviewStripComponent` | Row of headline metrics for a session |
-| `sl-detail-panel` | `DetailPanelComponent` | Expanded per-signal / per-event detail view |
-| `sl-event-badges` | `EventBadgesComponent` | Inline badges for sleep events |
-| `sl-live-banner` | `LiveBannerComponent` | Live-session status banner |
+| `cd-signal-chart` | `SignalChartComponent` | Line chart for a therapy signal (flow, pressure, …) with annotations |
+| `cd-metric-card` | `MetricCardComponent` | Single labelled metric (e.g. AHI) with unit |
+| `cd-overview-strip` | `OverviewStripComponent` | Row of headline metrics for a session |
+| `cd-detail-panel` | `DetailPanelComponent` | Expanded per-signal / per-event detail view |
+| `cd-event-badges` | `EventBadgesComponent` | Inline badges for sleep events |
+| `cd-live-banner` | `LiveBannerComponent` | Live-session status banner |
 
 Plus `chart-helpers` (dataset builders) and `theme` (shared chart theming) from the public API.
 
@@ -31,11 +32,11 @@ import { ChartDataset } from 'chart.js';
   standalone: true,
   imports: [SignalChartComponent, MetricCardComponent],
   template: `
-    <sl-metric-card label="AHI" [value]="ahi" unit="/h"></sl-metric-card>
-    <sl-signal-chart
+    <cd-metric-card label="AHI" [value]="ahi" unit="/h"></cd-metric-card>
+    <cd-signal-chart
       title="Flow Rate" unit="L/min"
       [labels]="labels" [datasets]="datasets" [height]="160">
-    </sl-signal-chart>
+    </cd-signal-chart>
   `
 })
 export class SessionComponent {

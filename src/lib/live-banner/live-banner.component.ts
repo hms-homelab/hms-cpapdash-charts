@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'sl-live-banner',
+  selector: 'cd-live-banner',
   standalone: true,
   imports: [CommonModule],
   template: `

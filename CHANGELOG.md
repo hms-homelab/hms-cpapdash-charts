@@ -1,5 +1,19 @@
 # Changelog
 
+## [2026.1.1] - 2026-06-05
+
+### Changed
+- **BREAKING:** renamed the component selector prefix `sl-*` → `cd-*`
+  (`cd-signal-chart`, `cd-metric-card`, `cd-overview-strip`, `cd-detail-panel`,
+  `cd-event-badges`, `cd-live-banner`). Consumer templates must update.
+- **BREAKING:** renamed the CSS custom properties `--sl-*` → `--cd-*`
+  (`--cd-card`, `--cd-border`, `--cd-primary`, `--cd-text-primary`,
+  `--cd-text-secondary`). Apps that themed via the old vars must update.
+
+### Added
+- MIT `LICENSE`.
+- `README.md` with usage and shared-library consumption guide.
+
 ## [2026.1.0] - 2026-04-02
 
 ### Added

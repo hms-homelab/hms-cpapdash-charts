@@ -6,7 +6,7 @@ import { CPAPDASH_COLORS } from '../theme';
 Chart.register(...registerables, annotationPlugin);
 
 @Component({
-  selector: 'sl-signal-chart',
+  selector: 'cd-signal-chart',
   standalone: true,
   template: `
     <div class="chart-card">
@@ -19,7 +19,7 @@ Chart.register(...registerables, annotationPlugin);
   `,
   styles: [`
     .chart-card {
-      background: var(--sl-card, #1e1e2f);
+      background: var(--cd-card, #1e1e2f);
       border-radius: 8px;
       padding: 0.5rem 0.75rem 0.25rem;
       margin-bottom: 4px;
@@ -31,12 +31,12 @@ Chart.register(...registerables, annotationPlugin);
       margin-bottom: 2px;
     }
     .chart-title {
-      color: var(--sl-text-primary, #e0e0e0);
+      color: var(--cd-text-primary, #e0e0e0);
       font-size: 0.75rem;
       font-weight: 600;
     }
     .chart-unit {
-      color: var(--sl-text-secondary, #888);
+      color: var(--cd-text-secondary, #888);
       font-size: 0.65rem;
     }
     canvas { width: 100% !important; }
