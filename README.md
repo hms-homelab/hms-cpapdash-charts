@@ -11,12 +11,12 @@ Built on [Chart.js](https://www.chartjs.org/) with `chartjs-plugin-annotation`. 
 
 | Selector | Component | Purpose |
 |----------|-----------|---------|
-| `cd-signal-chart` | `SignalChartComponent` | Line chart for a therapy signal (flow, pressure, …) with annotations |
-| `cd-metric-card` | `MetricCardComponent` | Single labelled metric (e.g. AHI) with unit |
-| `cd-overview-strip` | `OverviewStripComponent` | Row of headline metrics for a session |
-| `cd-detail-panel` | `DetailPanelComponent` | Expanded per-signal / per-event detail view |
-| `cd-event-badges` | `EventBadgesComponent` | Inline badges for sleep events |
-| `cd-live-banner` | `LiveBannerComponent` | Live-session status banner |
+| `sl-signal-chart` | `SignalChartComponent` | Line chart for a therapy signal (flow, pressure, …) with annotations |
+| `sl-metric-card` | `MetricCardComponent` | Single labelled metric (e.g. AHI) with unit |
+| `sl-overview-strip` | `OverviewStripComponent` | Row of headline metrics for a session |
+| `sl-detail-panel` | `DetailPanelComponent` | Expanded per-signal / per-event detail view |
+| `sl-event-badges` | `EventBadgesComponent` | Inline badges for sleep events |
+| `sl-live-banner` | `LiveBannerComponent` | Live-session status banner |
 
 Plus `chart-helpers` (dataset builders) and `theme` (shared chart theming) from the public API.
 
@@ -32,11 +32,11 @@ import { ChartDataset } from 'chart.js';
   standalone: true,
   imports: [SignalChartComponent, MetricCardComponent],
   template: `
-    <cd-metric-card label="AHI" [value]="ahi" unit="/h"></cd-metric-card>
-    <cd-signal-chart
+    <sl-metric-card label="AHI" [value]="ahi" unit="/h"></sl-metric-card>
+    <sl-signal-chart
       title="Flow Rate" unit="L/min"
       [labels]="labels" [datasets]="datasets" [height]="160">
-    </cd-signal-chart>
+    </sl-signal-chart>
   `
 })
 export class SessionComponent {

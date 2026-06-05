@@ -10,7 +10,7 @@ export interface EventCounts {
 }
 
 @Component({
-  selector: 'cd-event-badges',
+  selector: 'sl-event-badges',
   standalone: true,
   imports: [CommonModule],
   template: `

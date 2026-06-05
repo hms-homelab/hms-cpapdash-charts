@@ -18,7 +18,7 @@ export interface SignalDef {
 }
 
 @Component({
-  selector: 'cd-overview-strip',
+  selector: 'sl-overview-strip',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -31,7 +31,7 @@ export interface SignalDef {
           <span class="ov-title">{{ sig.title }}</span>
           <span class="ov-unit">{{ sig.unit }}</span>
         </div>
-        <canvas [id]="'cd-ov-' + sig.key"></canvas>
+        <canvas [id]="'sl-ov-' + sig.key"></canvas>
       </div>
     </div>
   `,
@@ -42,7 +42,7 @@ export interface SignalDef {
       gap: 4px;
     }
     .overview-card {
-      background: var(--cd-card, #1e1e2f);
+      background: var(--sl-card, #1e1e2f);
       border: 2px solid transparent;
       border-radius: 6px;
       padding: 0.4rem 0.5rem 0.2rem;
@@ -50,7 +50,7 @@ export interface SignalDef {
       transition: border-color 0.15s;
     }
     .overview-card:hover { border-color: #444; }
-    .overview-card.selected { border-color: var(--cd-primary, #64b5f6); }
+    .overview-card.selected { border-color: var(--sl-primary, #64b5f6); }
     .overview-header {
       display: flex;
       justify-content: space-between;
@@ -110,7 +110,7 @@ export class OverviewStripComponent implements AfterViewInit, OnChanges, OnDestr
     this.destroyCharts();
 
     for (const sig of this.signals) {
-      const canvas = document.getElementById('cd-ov-' + sig.key) as HTMLCanvasElement;
+      const canvas = document.getElementById('sl-ov-' + sig.key) as HTMLCanvasElement;
       if (!canvas) continue;
 
       // Use provided datasets or build a simple one from the first dataset's data

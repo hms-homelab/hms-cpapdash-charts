@@ -16,7 +16,7 @@ interface RangeOption {
 }
 
 @Component({
-  selector: 'cd-detail-panel',
+  selector: 'sl-detail-panel',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
@@ -47,7 +47,7 @@ interface RangeOption {
   `,
   styles: [`
     .detail-section {
-      background: var(--cd-card, #1e1e2f);
+      background: var(--sl-card, #1e1e2f);
       border-radius: 8px;
       padding: 0.75rem;
       margin-bottom: 0.5rem;
@@ -65,7 +65,7 @@ interface RangeOption {
       margin: 0;
     }
     .detail-unit {
-      color: var(--cd-text-secondary, #888);
+      color: var(--sl-text-secondary, #888);
       font-size: 0.75rem;
       font-weight: normal;
     }
@@ -86,9 +86,9 @@ interface RangeOption {
       border-radius: 3px;
     }
     .range-buttons button.active {
-      background: var(--cd-primary, #64b5f6);
+      background: var(--sl-primary, #64b5f6);
       color: #000;
-      border-color: var(--cd-primary, #64b5f6);
+      border-color: var(--sl-primary, #64b5f6);
     }
     .detail-chart-container {
       margin-top: 0.5rem;
@@ -102,12 +102,12 @@ interface RangeOption {
     .slider-container { margin-top: 0.5rem; }
     .time-slider {
       width: 100%;
-      accent-color: var(--cd-primary, #64b5f6);
+      accent-color: var(--sl-primary, #64b5f6);
     }
     .slider-labels {
       display: flex;
       justify-content: space-between;
-      color: var(--cd-text-secondary, #888);
+      color: var(--sl-text-secondary, #888);
       font-size: 0.65rem;
     }
     @media (max-width: 768px) {

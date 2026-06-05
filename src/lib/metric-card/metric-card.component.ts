@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'cd-metric-card',
+  selector: 'sl-metric-card',
   standalone: true,
   template: `
     <div class="metric-card">
@@ -11,15 +11,15 @@ import { Component, Input } from '@angular/core';
   `,
   styles: [`
     .metric-card {
-      background: var(--cd-card, #1e1e2f);
-      border: 1px solid var(--cd-border, #333);
+      background: var(--sl-card, #1e1e2f);
+      border: 1px solid var(--sl-border, #333);
       border-radius: 8px;
       padding: 1.2rem;
       min-width: 160px;
     }
     .label {
       font-size: 0.8rem;
-      color: var(--cd-text-secondary, #888);
+      color: var(--sl-text-secondary, #888);
       margin-bottom: 0.4rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -27,12 +27,12 @@ import { Component, Input } from '@angular/core';
     .value {
       font-size: 1.8rem;
       font-weight: 700;
-      color: var(--cd-text-primary, #e0e0e0);
+      color: var(--sl-text-primary, #e0e0e0);
     }
     .unit {
       font-size: 0.9rem;
       font-weight: 400;
-      color: var(--cd-text-secondary, #888);
+      color: var(--sl-text-secondary, #888);
       margin-left: 4px;
     }
   `]
