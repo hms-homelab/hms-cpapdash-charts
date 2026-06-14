@@ -22,7 +22,13 @@ interface RangeOption {
   template: `
     <div class="detail-section">
       <div class="detail-header">
-        <h3>{{ title }} <span class="detail-unit" *ngIf="unit">({{ unit }})</span></h3>
+        <h3>
+          {{ title }} <span class="detail-unit" *ngIf="unit">({{ unit }})</span>
+          <span class="odi-badge" *ngIf="odi !== null && odi !== undefined" [style.color]="odiColor"
+            title="Oxygen Desaturation Index — desaturations ≥3% per hour">
+            <i class="fa-solid fa-arrow-trend-down"></i> ODI {{ odi.toFixed(1) }}/hr
+          </span>
+        </h3>
         <div class="detail-controls">
           <div class="range-buttons">
             <button *ngFor="let r of rangeOptions"
@@ -124,6 +130,13 @@ export class DetailPanelComponent implements AfterViewInit, OnChanges, OnDestroy
   @Input() height = 300;
   @Input() yMin?: number;
   @Input() yMax?: number;
+  /** Oxygen Desaturation Index (desats/hr) — shows a badge in the header when set (F2). */
+  @Input() odi: number | null = null;
+
+  get odiColor(): string {
+    const o = this.odi ?? 0;
+    return o < 5 ? '#4ade80' : o < 15 ? '#fb923c' : '#ef4444';
+  }
 
   @ViewChild('detailCanvas') detailCanvasRef!: ElementRef<HTMLCanvasElement>;
   private chart: Chart | null = null;
