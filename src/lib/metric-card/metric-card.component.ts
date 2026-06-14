@@ -1,12 +1,17 @@
 import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'sl-metric-card',
   standalone: true,
+  imports: [CommonModule],
   template: `
     <div class="metric-card">
-      <div class="label">{{ label }}</div>
-      <div class="value">{{ value }}<span class="unit" *ngIf="unit">{{ unit }}</span></div>
+      <div class="card-top">
+        <i *ngIf="icon" [class]="icon" class="card-icon" [style.color]="iconColor"></i>
+        <div class="label">{{ label }}</div>
+      </div>
+      <div class="value">{{ value }}@if (unit) {<span class="unit">{{ unit }}</span>}</div>
     </div>
   `,
   styles: [`
@@ -15,12 +20,13 @@ import { Component, Input } from '@angular/core';
       border: 1px solid var(--sl-border, #333);
       border-radius: 8px;
       padding: 1.2rem;
-      min-width: 160px;
+      min-width: 140px;
     }
+    .card-top { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.4rem; }
+    .card-icon { font-size: 0.85rem; }
     .label {
       font-size: 0.8rem;
       color: var(--sl-text-secondary, #888);
-      margin-bottom: 0.4rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -41,4 +47,6 @@ export class MetricCardComponent {
   @Input() label = '';
   @Input() value = '';
   @Input() unit = '';
+  @Input() icon = '';
+  @Input() iconColor = '#888';
 }

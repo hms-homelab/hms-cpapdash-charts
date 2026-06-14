@@ -26,7 +26,11 @@ export interface ChartEvent {
 export function formatTimestamps(timestamps: string[]): string[] {
   return timestamps.map(ts => {
     if (!ts) return '';
-    const d = new Date(ts.replace(' ', 'T'));
+    let normalized = ts.replace(' ', 'T');
+    // PostgreSQL timestamptz uses bare offsets like -04; JS needs -04:00
+    normalized = normalized.replace(/([+-]\d{2})$/, '$1:00');
+    const d = new Date(normalized);
+    if (isNaN(d.getTime())) return '';
     const h = d.getHours().toString().padStart(2, '0');
     const m = d.getMinutes().toString().padStart(2, '0');
     return `${h}:${m}`;

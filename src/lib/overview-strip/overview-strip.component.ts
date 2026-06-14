@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter, AfterViewInit, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, Output, EventEmitter, AfterViewInit, OnChanges, OnDestroy, SimpleChanges, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Chart, ChartDataset, registerables } from 'chart.js';
 import { CPAPDASH_COLORS } from '../theme';
 
@@ -106,7 +106,9 @@ export class OverviewStripComponent implements AfterViewInit, OnChanges, OnDestr
     this.charts = [];
   }
 
+  private platformId = inject(PLATFORM_ID);
   private renderCharts() {
+    if (!isPlatformBrowser(this.platformId)) return;  // Chart.js needs a real canvas
     this.destroyCharts();
 
     for (const sig of this.signals) {

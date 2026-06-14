@@ -1,8 +1,8 @@
 import {
   Component, Input, ViewChild, ElementRef,
-  AfterViewInit, OnChanges, OnDestroy, SimpleChanges
+  AfterViewInit, OnChanges, OnDestroy, SimpleChanges, inject, PLATFORM_ID
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Chart, ChartDataset, registerables } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
@@ -208,7 +208,9 @@ export class DetailPanelComponent implements AfterViewInit, OnChanges, OnDestroy
     this.renderChart();
   }
 
+  private platformId = inject(PLATFORM_ID);
   private renderChart() {
+    if (!isPlatformBrowser(this.platformId)) return;  // Chart.js needs a real canvas
     if (!this.detailCanvasRef?.nativeElement || !this.labels.length) return;
 
     let visibleLabels = this.labels;

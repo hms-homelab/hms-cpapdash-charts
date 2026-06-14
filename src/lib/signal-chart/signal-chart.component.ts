@@ -1,4 +1,5 @@
-import { Component, Input, ViewChild, ElementRef, AfterViewInit, OnChanges, OnDestroy } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, AfterViewInit, OnChanges, OnDestroy, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Chart, ChartDataset, registerables } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { CPAPDASH_COLORS } from '../theme';
@@ -70,7 +71,9 @@ export class SignalChartComponent implements AfterViewInit, OnChanges, OnDestroy
     this.chart?.destroy();
   }
 
+  private platformId = inject(PLATFORM_ID);
   private renderChart() {
+    if (!isPlatformBrowser(this.platformId)) return;  // Chart.js needs a real canvas
     if (!this.canvasRef?.nativeElement || !this.labels.length) return;
     const canvas = this.canvasRef.nativeElement;
     canvas.height = this.height;
