@@ -1,8 +1,20 @@
 # Changelog
 
-## [Unreleased]
+## [2026.1.4] - 2026-08-12
 
 ### Added
+- **Event duration boxes on the annotation layer (F1).** `eventAnnotations` now
+  draws a translucent box spanning an event's `duration_seconds` rather than a
+  single line, with a minimum width so a short event stays visible on a coarse
+  axis, and keeps the dashed marker for zero-duration events like RERA. Adds
+  `eventColor` for case-insensitive lookup, and colours for apnea, CSR and
+  desaturation. Landed separately and released here.
+
+  Its `duration_seconds` is typed `number | string`, because the API sends
+  Postgres numerics quoted and the implementation already coerces with
+  `Number()`. Declared as `number` alone, the cloud frontend could not compile
+  against its own payload.
+
 - **`card-time.ts` — a card timestamp is drawn on the PATIENT's clock** (SDD-057).
   A CPAP card records a wall clock and no zone. Turning that into a displayed
   time needs to know where the patient sleeps, and the answer is never the
@@ -29,12 +41,11 @@
   It read `getHours()` off a Date, so the same night drew at different hours
   depending on who opened it — a California viewer saw a 22:20 night at 13:20
   (CpapDash support ticket 72). It now delegates to `cardClock`.
-- **`eventAnnotations` parses both sides of its comparison the same way.** Event
-  timestamps went through `new Date()` without the bare-offset repair while the
-  series went through the same unrepaired path, so it was matching an instant
-  against a value the engine was free to interpret differently. Both now use
-  `parseCardInstant`, and a series entry that fails to parse is skipped rather
-  than compared as `NaN`.
+- **`eventAnnotations` parses both sides of its comparison the same way.** The
+  event timestamp and the series timestamps both went through `new Date()`
+  without the bare-offset repair PostgreSQL's "-04" needs, so an event was being
+  placed by comparing an instant against whatever the engine made of an
+  unrepaired string. Both sides now go through `parseCardInstant`.
 
 ## [2026.1.1] - 2026-06-05
 
