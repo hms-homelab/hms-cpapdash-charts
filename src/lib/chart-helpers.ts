@@ -31,7 +31,13 @@ export function eventColor(type: string): string {
 export interface ChartEvent {
   event_timestamp: string;
   event_type: string;
-  duration_seconds?: number;
+  /**
+   * Seconds, as a number OR as the string the API actually sends. Postgres
+   * numerics come over the wire quoted ("12"), which is why the implementation
+   * coerces with `Number()`; declaring this `number` only made the consumer
+   * fail to compile against its own payload.
+   */
+  duration_seconds?: number | string;
 }
 
 /** Fractional index of an absolute time within a (sorted) per-bucket timeline. */
