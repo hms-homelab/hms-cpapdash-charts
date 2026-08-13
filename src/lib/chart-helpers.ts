@@ -1,4 +1,5 @@
 import { ChartDataset } from 'chart.js';
+import { cardClock, parseCardInstant } from './card-time';
 
 /** Color map for respiratory event types. */
 export const EVENT_COLORS: Record<string, string> = {
@@ -49,20 +50,15 @@ function fractionalIndex(timeMs: number, tsMs: number[]): number {
 }
 
 /**
- * Convert ISO/datetime timestamps to HH:MM display labels.
+ * Convert card timestamps to HH:MM axis labels.
+ *
+ * SDD-057: on the PATIENT's clock, not the viewer's. A chart axis is the one
+ * place the skew was most visible — Michael Kearney's 22:20 night drew at 13:20
+ * in California — so this delegates to the single card-time contract rather
+ * than reading the viewer's local parts off a Date.
  */
 export function formatTimestamps(timestamps: string[]): string[] {
-  return timestamps.map(ts => {
-    if (!ts) return '';
-    let normalized = ts.replace(' ', 'T');
-    // PostgreSQL timestamptz uses bare offsets like -04; JS needs -04:00
-    normalized = normalized.replace(/([+-]\d{2})$/, '$1:00');
-    const d = new Date(normalized);
-    if (isNaN(d.getTime())) return '';
-    const h = d.getHours().toString().padStart(2, '0');
-    const m = d.getMinutes().toString().padStart(2, '0');
-    return `${h}:${m}`;
-  });
+  return timestamps.map(ts => cardClock(ts));
 }
 
 /**
@@ -72,15 +68,19 @@ export function formatTimestamps(timestamps: string[]): string[] {
 export function eventAnnotations(events: ChartEvent[], labels: string[], timestamps: string[]): any[] {
   if (!events?.length || !timestamps?.length) return [];
 
-  const tsMs = timestamps.map(t => new Date((t || '').replace(' ', 'T')).getTime());
+  const tsMs = timestamps.map(t => parseCardInstant(t)?.getTime() ?? NaN);
   // Minimum span width (index units) so short events stay visible on a coarse axis.
   const MIN_W = 0.35;
 
   const annotations: any[] = [];
   for (const e of events) {
-    const eventTime = e.event_timestamp?.replace(' ', 'T');
-    if (!eventTime) continue;
-    const startMs = new Date(eventTime).getTime();
+    // SDD-057: the event goes through the same parser as the series below.
+    // These are instants being matched against instants, and the bare "-04"
+    // offset Postgres writes has to be repaired on BOTH or the comparison is
+    // between an instant and whatever the engine made of an unrepaired string.
+    const eventDate = parseCardInstant(e.event_timestamp);
+    if (!eventDate) continue;
+    const startMs = eventDate.getTime();
     const dur = Number(e.duration_seconds) || 0;
     const color = eventColor(e.event_type);
 
