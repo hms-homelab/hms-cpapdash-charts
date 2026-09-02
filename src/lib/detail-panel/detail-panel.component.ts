@@ -1,5 +1,5 @@
 import {
-  Component, Input, ViewChild, ElementRef,
+  Component, Input, Output, EventEmitter, ViewChild, ElementRef,
   AfterViewInit, OnChanges, OnDestroy, SimpleChanges, inject, PLATFORM_ID
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -141,6 +141,26 @@ export class DetailPanelComponent implements AfterViewInit, OnChanges, OnDestroy
   @ViewChild('detailCanvas') detailCanvasRef!: ElementRef<HTMLCanvasElement>;
   private chart: Chart | null = null;
 
+  /**
+   * SDD-071 §3.0 / D3: the stretch on screen, as INDICES into `labels`
+   * (`end` exclusive), or null for the whole night. The 30m/1h/2h buttons and
+   * the slider are the brush; whoever holds the raw timestamps turns the
+   * indices back into absolute instants for the explainer. Emitted on every
+   * change and once on render, so a listener never has to ask.
+   */
+  @Output() viewChange = new EventEmitter<{ start: number; end: number } | null>();
+
+  /** The canvas, for a snapshot of exactly what is drawn (SDD-072). */
+  get canvas(): HTMLCanvasElement | undefined {
+    return this.detailCanvasRef?.nativeElement;
+  }
+
+  private emitView() {
+    this.viewChange.emit(this.activeRange === 'all'
+      ? null
+      : { start: this.viewStart, end: this.viewEnd });
+  }
+
   rangeOptions: RangeOption[] = [
     { label: '30m', value: 30 },
     { label: '1h', value: 60 },
@@ -169,6 +189,7 @@ export class DetailPanelComponent implements AfterViewInit, OnChanges, OnDestroy
       this.chart.destroy();
       this.chart = null;
       this.renderChart();
+      this.emitView();
     }
   }
 
@@ -206,6 +227,7 @@ export class DetailPanelComponent implements AfterViewInit, OnChanges, OnDestroy
     this.chart?.destroy();
     this.chart = null;
     this.renderChart();
+    this.emitView();
   }
 
   private platformId = inject(PLATFORM_ID);
