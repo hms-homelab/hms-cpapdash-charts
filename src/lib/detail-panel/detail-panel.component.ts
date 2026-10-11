@@ -4,11 +4,49 @@ import {
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Chart, ChartDataset, registerables } from 'chart.js';
+import { Chart, ChartDataset, Plugin, registerables } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { CPAPDASH_COLORS } from '../theme';
 
 Chart.register(...registerables, annotationPlugin);
+
+const REVEAL_MS = 800;
+
+function prefersReducedMotion(): boolean {
+  return typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+/**
+ * Draws the datasets left to right by widening a clip over REVEAL_MS
+ * (ease-out cubic). A clip rather than Chart.js's per-point animation: a
+ * night's signal holds thousands of points. Axes and annotations draw at once.
+ */
+function clipReveal(start: number): Plugin<'line'> {
+  let done = false;
+  return {
+    id: 'slDetailReveal',
+    beforeDatasetsDraw(chart) {
+      if (done || !chart.chartArea) return;
+      const t = Math.min(1, (performance.now() - start) / REVEAL_MS);
+      const a = chart.chartArea;
+      chart.ctx.save();
+      chart.ctx.beginPath();
+      chart.ctx.rect(a.left, a.top - 4, (a.right - a.left) * (1 - Math.pow(1 - t, 3)), a.bottom - a.top + 8);
+      chart.ctx.clip();
+    },
+    afterDatasetsDraw(chart) {
+      if (done || !chart.chartArea) return;
+      chart.ctx.restore();
+      if (performance.now() - start < REVEAL_MS) {
+        requestAnimationFrame(() => { if ((chart as any).ctx) chart.draw(); });
+      } else {
+        done = true;
+      }
+    },
+  };
+}
 
 interface RangeOption {
   label: string;
@@ -183,12 +221,13 @@ export class DetailPanelComponent implements AfterViewInit, OnChanges, OnDestroy
   ngOnChanges(changes: SimpleChanges) {
     if (this.chart) {
       // Reset range when data changes
-      if (changes['labels'] || changes['datasets']) {
+      const newData = !!(changes['labels'] || changes['datasets']);
+      if (newData) {
         this.activeRange = 'all';
       }
       this.chart.destroy();
       this.chart = null;
-      this.renderChart();
+      this.renderChart(newData);
       this.emitView();
     }
   }
@@ -206,9 +245,10 @@ export class DetailPanelComponent implements AfterViewInit, OnChanges, OnDestroy
     this.sliderMax = Math.max(0, this.labels.length - range);
     this.sliderPos = 0;
     this.updateSliderWindow();
-    this.rerender();
+    this.rerender(true);
   }
 
+  // The slider scrubs: the window follows the thumb with no draw-in.
   onSliderChange() {
     this.updateSliderWindow();
     this.rerender();
@@ -223,15 +263,20 @@ export class DetailPanelComponent implements AfterViewInit, OnChanges, OnDestroy
     this.sliderEndLabel = this.labels[this.viewEnd - 1] || '';
   }
 
-  private rerender() {
+  private rerender(reveal = false) {
     this.chart?.destroy();
     this.chart = null;
-    this.renderChart();
+    this.renderChart(reveal);
     this.emitView();
   }
 
   private platformId = inject(PLATFORM_ID);
-  private renderChart() {
+  /**
+   * reveal: draw the lines in from the left, for a chart that just opened or
+   * whose range button was pressed. Anything else (the slider, a resize, an
+   * input that is not the data) draws the chart finished.
+   */
+  private renderChart(reveal = true) {
     if (!isPlatformBrowser(this.platformId)) return;  // Chart.js needs a real canvas
     if (!this.detailCanvasRef?.nativeElement || !this.labels.length) return;
 
@@ -257,6 +302,7 @@ export class DetailPanelComponent implements AfterViewInit, OnChanges, OnDestroy
 
     this.chart = new Chart(canvas, {
       type: 'line',
+      plugins: reveal && !prefersReducedMotion() ? [clipReveal(performance.now())] : [],
       data: { labels: visibleLabels, datasets: visibleDatasets },
       options: {
         responsive: true,
