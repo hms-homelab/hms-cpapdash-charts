@@ -51,6 +51,9 @@ import { CommonModule } from '@angular/common';
       0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(76,175,80,0.4); }
       50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(76,175,80,0); }
     }
+    @media (prefers-reduced-motion: reduce) {
+      .live-dot { animation: none; }
+    }
   `]
 })
 export class LiveBannerComponent {
