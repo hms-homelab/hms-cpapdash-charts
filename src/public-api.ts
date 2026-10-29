@@ -4,6 +4,8 @@ export * from './lib/overview-strip/overview-strip.component';
 export * from './lib/detail-panel/detail-panel.component';
 export * from './lib/live-banner/live-banner.component';
 export * from './lib/event-badges/event-badges.component';
+export * from './lib/chart-frame/chart-frame.component';
+export * from './lib/chart-text';
 export * from './lib/card-time';
 export * from './lib/chart-helpers';
 export * from './lib/signal-analysis';

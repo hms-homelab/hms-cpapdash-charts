@@ -7,8 +7,10 @@ import { FormsModule } from '@angular/forms';
 import { Chart, ChartDataset, Plugin, registerables } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { CPAPDASH_COLORS } from '../theme';
+import { CHART_TEXT, applyReadableChartText } from '../chart-text';
 
 Chart.register(...registerables, annotationPlugin);
+applyReadableChartText();
 
 const REVEAL_MS = 800;
 
@@ -328,8 +330,8 @@ export class DetailPanelComponent implements AfterViewInit, OnChanges, OnDestroy
         scales: {
           x: {
             ticks: {
-              color: CPAPDASH_COLORS.textSecondary,
-              font: { size: 10 },
+              color: CHART_TEXT.ink,
+              font: { size: CHART_TEXT.tick },
               maxRotation: 0,
               autoSkip: true,
               maxTicksLimit: 20,
@@ -339,7 +341,7 @@ export class DetailPanelComponent implements AfterViewInit, OnChanges, OnDestroy
           y: {
             min: this.yMin,
             max: this.yMax,
-            ticks: { color: CPAPDASH_COLORS.textSecondary, font: { size: 10 } },
+            ticks: { color: CHART_TEXT.ink, font: { size: CHART_TEXT.tick } },
             grid: { color: CPAPDASH_COLORS.grid },
           },
         },
