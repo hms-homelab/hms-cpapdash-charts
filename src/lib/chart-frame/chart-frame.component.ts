@@ -130,6 +130,9 @@ export class ChartFrameComponent implements OnDestroy {
   get chart(): Chart | undefined { return this._chart; }
   private _chart?: Chart;
 
+  /** A long range opens on its newest N points, the rest a pan or Show all away. */
+  @Input() openOn = 0;
+
   @Output() windowChange = new EventEmitter<FrameWindow | null>();
 
   win?: FrameWindow;
@@ -150,6 +153,11 @@ export class ChartFrameComponent implements OnDestroy {
       zoom: { wheel: { enabled: false }, pinch: { enabled: true }, mode: 'x', onZoomComplete: () => this.readWindow() },
     };
     c.update('none');
+    const total = (c.data.labels ?? []).length;
+    if (this.openOn > 0 && total > this.openOn) {
+      (c as any).zoomScale('x', { min: total - this.openOn, max: total - 1 }, 'none');
+    }
+    this.readWindow();
   }
 
   /** The window as indices into the labels, from the x scale. */
